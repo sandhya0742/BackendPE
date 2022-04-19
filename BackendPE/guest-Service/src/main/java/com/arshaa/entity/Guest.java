@@ -14,7 +14,7 @@ import org.hibernate.annotations.Parameter;
 @NamedStoredProcedureQuery(name = "firstProcedure", procedureName = " due_amount", parameters = {
 @StoredProcedureParameter(mode = ParameterMode.IN, name = "g_id", type = String.class) })
 ,
-@NamedStoredProcedureQuery(name = "secondProcedure", procedureName = " total_dues_for_dashboard"),})
+@NamedStoredProcedureQuery(name = "secondProcedure", procedureName = " total_amount_building"),})
 @NamedStoredProcedureQuery(name= "thirdProcedure" , procedureName= " by_building" , parameters = {
 @StoredProcedureParameter(mode = ParameterMode.IN , name = "b_id" , type= Integer.class )
 })
