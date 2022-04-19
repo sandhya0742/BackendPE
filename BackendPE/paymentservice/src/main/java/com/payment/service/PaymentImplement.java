@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ public class PaymentImplement implements PaymentService {
     @Autowired
     @Lazy
     private RestTemplate template;
+    
+    @Autowired
+    private EntityManager em ;
 
     Logger log = LoggerFactory.getLogger(PaymentImplement.class);
 
@@ -149,5 +154,12 @@ public class PaymentImplement implements PaymentService {
         }
         return null;
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Payments> getPaymentPending() {
+		// TODO Auto-generated method stub
+		return  em.createNamedStoredProcedureQuery("secondProcedure").getResultList();
+	}
 
 }

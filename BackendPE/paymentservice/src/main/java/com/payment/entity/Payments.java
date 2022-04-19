@@ -6,6 +6,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "payments")
+@NamedStoredProcedureQueries({
+@NamedStoredProcedureQuery(name = "secondProcedure", procedureName = " total_amount_building"),})
 public class Payments {
 
     @Id

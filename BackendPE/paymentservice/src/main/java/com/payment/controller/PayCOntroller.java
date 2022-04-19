@@ -156,6 +156,10 @@ public class PayCOntroller {
 		ppt.setPendingPayments(pays);
 		return ppt;
 	}
+	@GetMapping("/getpendingPayment")
+	List<Payments> getPaymentPendings(){
+		return serve.getPaymentPending();
+	}
 //    @GetMapping("/getDueByGuestId/{guestId}")
 //    public double getDueById(@PathVariable String guestId) {
 //        return repos.findDueAmountByGuestId(guestId);

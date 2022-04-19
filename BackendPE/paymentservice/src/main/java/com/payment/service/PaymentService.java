@@ -30,16 +30,6 @@ public interface PaymentService {
 //7.Posting the data of Guest After onBOarding .
 	public Payments addPaymentAfterOnBoard(Payments payment);
 
-	// double getDailyRent() ;
-
-	// double getMonthlyRent () ;
-
-	// default String getFormattedDailyRent () {
-	// return getCurrencyInstance().format(getDailyRent()) ;
-	// }
-
-	// default String getFormattedMonthlyRent () {
-	// return getCurrencyInstance().format(getDailyRent()) ;
-	// }
+	public List<Payments> getPaymentPending();
 
 }
