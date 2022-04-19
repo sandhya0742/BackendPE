@@ -75,7 +75,7 @@ public class BedController {
 	public ResponseEntity<String> test() {
 		return new ResponseEntity<>("hello", HttpStatus.OK);
 	}
-
+// POST API TO ADD MASTER DATA
 	@PostMapping(path = "/addBuilding")
 	public ResponseEntity<UsersMaster> addBuilding(@RequestBody UsersMaster newMaster) {
 		try {
