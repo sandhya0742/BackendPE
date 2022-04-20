@@ -211,6 +211,12 @@ public class BedController {
 		try {
 			java.sql.Date tSqlDate = new java.sql.Date(newBed.getCreatedOn().getTime());
 			newBed.setCreatedOn(tSqlDate);
+			boolean check=bedrepo.existsByBedId(newBed.getBedId());
+			if(check==true)
+			{
+				System.out.println(check);
+				return new ResponseEntity("BedId already exist", HttpStatus.OK);
+			}
 			Bed bed = bedrepo.save(newBed);
 			return new ResponseEntity("Bed Added Successfully", HttpStatus.OK);
 		} catch (Exception e) {
