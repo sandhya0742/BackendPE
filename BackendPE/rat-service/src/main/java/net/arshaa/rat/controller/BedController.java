@@ -94,6 +94,22 @@ public class BedController {
 			    java.sql.Date tSqlDate = new java.sql.Date(newMaster.getCreatedOn().getTime());
 			    builds.setCreatedOn(tSqlDate);
 			    Buildings building = buildingRepo.save(builds);
+			    for(int i=1;i<8;i++)
+			    {
+					/*
+					 * System.out.println("hi");
+					 * template.postForObject("http://bedService/bed/addFloor" +
+					 * building.getBuilding_id(), i, Floors.class);
+					 */
+			    	//System.out.println("hi");
+			    	
+			    	Floors floors=new Floors();
+					
+					floors.setBuildingId(building.getBuilding_id());
+			        floors.setFloorNumber("FLOOR"+ i);
+					Floors floor = floorRepo.save(floors);
+			    	
+			    }
 			    User user=new User();
 			    user.setEmail(newMaster.getEmail());
 			    user.setPassword(newMaster.getPassword());
@@ -163,20 +179,40 @@ public class BedController {
 		try {
 			java.sql.Date tSqlDate = new java.sql.Date(newRoom.getCreatedOn().getTime());
 			newRoom.setCreatedOn(tSqlDate);
-			Rooms room = roomRepo.save(newRoom);
+			/*
+			 * boolean check1=roomRepo.existsByRoomNumber(newRoom.getRoomId()); boolean
+			 * check2=roomRepo.existsByFloorId(newRoom.getFloorId());
+			 * 
+			 * if(check1==true && check2==true) { return new
+			 * ResponseEntity("Room already exists in that floor",
+			 * HttpStatus.ALREADY_REPORTED); }
+			 */	
+			
+Rooms room = roomRepo.save(newRoom);
+			
 			return new ResponseEntity<>("Room Added Successfully", HttpStatus.OK);
+
 		} catch (Exception e) {
-			return new ResponseEntity<>("Something Went Wrong", HttpStatus.OK);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
 		}
 	}
 
 	// Api to add Floor
-	@PostMapping(path = "/addFloor")
-	public ResponseEntity<String> addFloor(@RequestBody Floors newFloor) {
+	
+	@PostMapping(path = "/addFloor/{buildingId}")
+	public ResponseEntity<String> addFloor(@PathVariable Integer i, @PathVariable Integer buildingId) {
 		try {
-			java.sql.Date tSqlDate = new java.sql.Date(newFloor.getCreatedOn().getTime());
-			newFloor.setCreatedOn(tSqlDate);
-			Floors floor = floorRepo.save(newFloor);
+			/*
+			 * java.sql.Date tSqlDate = new
+			 * java.sql.Date(newFloor.getCreatedOn().getTime());
+			 * newFloor.setCreatedOn(tSqlDate);
+			 */			
+			Floors floors=new Floors();
+			
+				floors.setBuildingId(buildingId);
+		        floors.setFloorNumber("FLOOR"+ i);
+				Floors floor = floorRepo.save(floors);
+				
 			return new ResponseEntity<>("Floor Added Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("Something Went Wrong", HttpStatus.OK);
@@ -208,6 +244,7 @@ public class BedController {
 
 	@PostMapping(path = "/addBed")
 	public ResponseEntity<Bed> addBed(@RequestBody Bed newBed) {
+		Bed bed1=new Bed();
 		try {
 			java.sql.Date tSqlDate = new java.sql.Date(newBed.getCreatedOn().getTime());
 			newBed.setCreatedOn(tSqlDate);
@@ -217,10 +254,36 @@ public class BedController {
 				System.out.println(check);
 				return new ResponseEntity("BedId already exist", HttpStatus.OK);
 			}
-			Bed bed = bedrepo.save(newBed);
+			//String roomNumber=roomRepo.getRoomNumberByRoomId(newBed.getRoomId());
+			/*
+			 * Floors floors=floorRepo.getFloorNumberByFloorId(newBed.getFloorId()); //
+			 * Finding string length int n = floors.getFloorNumber().length();
+			 * 
+			 * // First character of a string char first =
+			 * floors.getFloorNumber().charAt(0);
+			 * 
+			 * // Last character of a string char last = floors.getFloorNumber().charAt(n -
+			 * 1);
+			 */			System.out.println("HI");
+			Rooms rooms=roomRepo.getRoomNumberByRoomId(newBed.getRoomId());
+			
+			bed1.setAc(newBed.isAc());
+			bed1.setBedName(newBed.getBedName());
+			bed1.setBedStatus(true);
+			bed1.setBuildingId(newBed.getBuildingId());
+			bed1.setDefaultRent(newBed.getDefaultRent());
+			bed1.setRoomId(newBed.getRoomId());
+			bed1.setFloorId(newBed.getFloorId());
+			bed1.setCreatedBy(newBed.getCreatedBy());
+			bed1.setCreatedOn(newBed.getCreatedOn());
+			bed1.setSecurityDeposit(newBed.getSecurityDeposit());
+			Bed bed = bedrepo.save(bed1);
+			bed1.setBedId(bed1.getId()+"-"+ rooms.getRoomNumber()+"-"+newBed.getBedName()+"-"+(newBed.isAc()==true ? "AC":"NonAC"));
+			Bed bed2 = bedrepo.save(bed1);
+
 			return new ResponseEntity("Bed Added Successfully", HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity("Something went wrong", HttpStatus.OK);
+			return new ResponseEntity(e.getMessage(), HttpStatus.OK);
 		}
 	}
 
@@ -239,6 +302,13 @@ public class BedController {
 			bed.setGuestId(bedDetails.getGuestId());
 			bed.setRoomId(bedDetails.getRoomId());
 			bed.setSecurityDeposit(bedDetails.getSecurityDeposit());
+			bed.setBuildingId(bedDetails.getBuildingId());
+			boolean check=bedrepo.existsByBedId(bedDetails.getBedId());
+			if(check==true)
+			{
+				System.out.println(check);
+				return new ResponseEntity("BedId already exist", HttpStatus.OK);
+			}
 			Bed updatedBed = bedrepo.save(bed);
 			return new ResponseEntity("Bed Updated Successfully", HttpStatus.OK);
 		} catch (Exception e) {
@@ -246,6 +316,42 @@ public class BedController {
 
 		}
 	}
+	// APi to update Room by id
+
+		@PutMapping("/updateRoomById/{id}")
+		public ResponseEntity<Bed> updateRoom(@PathVariable int id, @RequestBody Rooms roomDetails) {
+			try {
+                Rooms rooms=roomRepo.getById(id);
+                rooms.setBuildingId(roomDetails.getBuildingId());
+                if((rooms.getRoomNumber().equals(roomDetails.getRoomNumber()) && (rooms.getFloorId()==roomDetails.getFloorId())))               		
+                		{
+    				return new ResponseEntity("Room already exists in that floor", HttpStatus.ALREADY_REPORTED);
+                		}
+                rooms.setFloorId(roomDetails.getFloorId());
+                rooms.setRoomNumber(roomDetails.getRoomNumber());
+                Rooms updatedRooms = roomRepo.save(rooms);
+				return new ResponseEntity("Updated Successfully", HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity("Something went wrong can't able to update", HttpStatus.ALREADY_REPORTED);
+
+			}
+		}
+		// APi to update Floor by id
+
+		@PutMapping("/updateFlooById/{id}")
+		public ResponseEntity<Bed> updateFloor(@PathVariable int id, @RequestBody Floors floorDetails) {
+			try {
+                Floors floors=floorRepo.getById(id);
+                
+                floors.setBuildingId(floorDetails.getBuildingId());
+                floors.setFloorId(floorDetails.getFloorId());
+                Floors updatedFloors = floorRepo.save(floors);
+				return new ResponseEntity("Updated Successfully", HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity("Something went wrong can't able to update", HttpStatus.ALREADY_REPORTED);
+
+			}
+		}
 
 	// Update api to update building data
 	@PutMapping("updateBuildingById/{id}")
@@ -277,13 +383,13 @@ public class BedController {
 
 	}
 
-// Api  to delete bed by id
+// Api  to delete Room by id
 
-	@DeleteMapping("/deleteBed/{id}")
-	public ResponseEntity<String> deletebed(@PathVariable int id) {
+	@DeleteMapping("/deleteRoom/{id}")
+	public ResponseEntity<String> deleteRoom(@PathVariable int id) {
 
 		try {
-			bedrepo.deleteById(id);
+			roomRepo.deleteById(id);
 			return new ResponseEntity<String>("Deleted Successfully", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("Something went wrong", HttpStatus.OK);
@@ -291,6 +397,34 @@ public class BedController {
 		}
 
 	}
+	// Api  to delete Floor by id
+
+		@DeleteMapping("/deleteFloor/{id}")
+		public ResponseEntity<String> deleteFloor(@PathVariable int id) {
+
+			try {
+				floorRepo.deleteById(id);
+				return new ResponseEntity<String>("Deleted Successfully", HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<String>("Something went wrong", HttpStatus.OK);
+
+			}
+
+		}
+	// Api  to delete bed by id
+
+		@DeleteMapping("/deleteBed/{id}")
+		public ResponseEntity<String> deletebed(@PathVariable int id) {
+
+			try {
+				bedrepo.deleteById(id);
+				return new ResponseEntity<String>("Deleted Successfully", HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<String>("Something went wrong", HttpStatus.OK);
+
+			}
+
+		}
 
 	// Api to get beddata
 	@GetMapping("/getAllBeds")

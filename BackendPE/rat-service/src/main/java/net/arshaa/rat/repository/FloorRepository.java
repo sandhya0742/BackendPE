@@ -12,4 +12,6 @@ public interface FloorRepository extends JpaRepository<Floors, Integer>{
 
 	public Optional<List<Floors>> findByBuildingId(Integer id);
 
+	public Floors getFloorNumberByFloorId(int floorId);
+
 }
