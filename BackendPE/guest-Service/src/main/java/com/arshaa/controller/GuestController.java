@@ -81,9 +81,21 @@ public class GuestController {
    		}
 			return new ResponseEntity("Guest is Inactive", HttpStatus.OK);
    	}
-
+  
    	@GetMapping("/getPendingAndCompletedById/{buildingId}")
    	public List<Guest> getPendingByBuildingId(@PathVariable int buildingId) {
    	return service.getPendingByBuildingId(buildingId);
    	}
+   	
+   	@GetMapping("/getFinalDueAmountForCheckout/{id}")
+   	public List<Guest> getCheckOutAmountByGuestId(@PathVariable String id){
+   	return service.getCheckOutAmountByGuestId(id);
+   	}
+   	
+   	@GetMapping("/checkOutGuest/{id}")
+   	public List<Guest> checkOutGuest(@PathVariable String id){
+   	return service.getFinalDueAmountById(id);
+   	}
+
+
 }

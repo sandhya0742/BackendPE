@@ -111,32 +111,22 @@ public class PayCOntroller {
 	 * (payments.getDueAmount() > 0) { } List<Payments> pay1 = repos.findAll(); int
 	 * count = pay1.size(); pp.setPendingPayments(count); return pp; }
 	 */
-	@GetMapping("/pendingPayments")
-	public PendingPayments getPendingPayments() {
-		// TODO Auto-generated method stub
-		// Payment getpayment=repos.findAllGuests();
-		Payments payments = new Payments();
-		// Payment getGuests=repos.findByGuestId(payments.getGuestId());
-		PendingPayments pp = new PendingPayments();
-		// List<Payment> pay=repos.findPaymentByGuestId(payments.getGuestId());
-		List<Payments> p = repos.getDueAmountByGuestId(payments.getGuestId());
-
-		if (p.isEmpty()) {
-			p.forEach(pay -> {
-				int count = p.size();
-				if (pay.getDueAmount() > 0) {
-					int c = p.size();
-					pp.setPendingPayments(c);
-				} else if (pay.getDueAmount() < 0) {
-					int f = p.size();
-				}
-			});
-		}
-		// pp.setPendingPayments(c);
-		return pp;
-
-	}
-
+	/*
+	 * @GetMapping("/pendingPayments") public PendingPayments getPendingPayments() {
+	 * // TODO Auto-generated method stub // Payment
+	 * getpayment=repos.findAllGuests(); Payments payments = new Payments(); //
+	 * Payment getGuests=repos.findByGuestId(payments.getGuestId()); PendingPayments
+	 * pp = new PendingPayments(); // List<Payment>
+	 * pay=repos.findPaymentByGuestId(payments.getGuestId()); List<Payments> p =
+	 * repos.getDueAmountByGuestId(payments.getGuestId());
+	 * 
+	 * if (p.isEmpty()) { p.forEach(pay -> { int count = p.size(); if
+	 * (pay.getDueAmount() > 0) { int c = p.size(); pp.setPendingPayments(c); } else
+	 * if (pay.getDueAmount() < 0) { int f = p.size(); } }); } //
+	 * pp.setPendingPayments(c); return pp;
+	 * 
+	 * }
+	 */
 	// API CALL FOR FETCHING OVERALL DUE AMOUNT
 
 	@GetMapping("/fetchingOverAllDueAmount")

@@ -22,4 +22,7 @@ public interface GuestInterface {
     public List<Guest>  getTotalDue();
     
     public List<Guest> getPendingByBuildingId(int buildingId);
+    public List<Guest> getCheckOutAmountByGuestId(String id);
+ 
+    public List<Guest> getFinalDueAmountById(String id);
 }

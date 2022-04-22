@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import net.arshaa.rat.entity.Floors;
 import net.arshaa.rat.entity.Rooms;
 
 public interface RoomRepository extends JpaRepository<Rooms, Integer>{
@@ -16,6 +17,8 @@ public interface RoomRepository extends JpaRepository<Rooms, Integer>{
 	public boolean existsByFloorId(int floorId);
 
 	public Rooms getRoomNumberByRoomId(int roomId);
+
+	public List<Rooms> getRoomsByFloorId(int floorId);
 
 
 

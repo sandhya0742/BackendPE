@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -54,11 +56,42 @@ public class GuestService implements GuestInterface {
         guest.setTransactionDate(tSqlDate);
         java.sql.Date cSqlDate = new java.sql.Date(guest.getCheckInDate().getTime());
         guest.setCheckInDate(cSqlDate);
-//        System.out.println(initialDefaultrent);
-        guest.setGuestStatus(true);
-        
+        if(guest.getOccupancyType().equalsIgnoreCase("daily"))
+        {
+        	java.util.Date m = guest.getCheckInDate();
+            Calendar cal = Calendar.getInstance();  
+            cal.setTime(m);  
+            cal.add(Calendar.DATE, guest.getDuration()); 
+            m = cal.getTime();   
+            System.out.println(m);
+            guest.setCheckOutDate(m);
+            guest.setGuestStatus(true);            
+            repository.save(guest);
+        }
+        else if(guest.getOccupancyType().equalsIgnoreCase("monthly"))
+        {
+        	java.util.Date m = guest.getCheckInDate();
+            Calendar cal = Calendar.getInstance();  
+            cal.setTime(m);  
+            cal.add(Calendar.MONTH, guest.getDuration()); 
+            m = cal.getTime();   
+            System.out.println(m);
+            guest.setCheckOutDate(m);
+            guest.setGuestStatus(true);            
+            repository.save(guest);
+        }        
+        else {
+            guest.setGuestStatus(true);            
+
+            repository.save(guest);
+        }
+
+
+//        System.out.println(initialDefaultrent); 
+        guest.setGuestStatus(true);            
+
         repository.save(guest);
-        System.out.println(guest.getDueAmount());
+                System.out.println(guest.getDueAmount());
         Bed bedReq = new Bed();
         Payment payReq = new Payment();
         //bed setting
@@ -78,7 +111,7 @@ public class GuestService implements GuestInterface {
         //payReq.setPaymentPurpose(guest.getPaymentPurpose());
         Payment parRes = template.postForObject(payUri, payReq, Payment.class);
         System.out.println(parRes);
-        return guest;
+                return guest;
     }
 
     @Override
@@ -114,8 +147,6 @@ public class GuestService implements GuestInterface {
 
  	}
 
-
-
 	@Override
 	public List<Guest> getPendingByBuildingId(int buildingId) {
 		// TODO Auto-generated method stub
@@ -123,6 +154,21 @@ public class GuestService implements GuestInterface {
 
 
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Guest> getCheckOutAmountByGuestId(String id) {
+	// TODO Auto-generated method stub
+	return em.createNamedStoredProcedureQuery("checkOut").setParameter("GUEST__ID" , id).getResultList();
+	}
+
+	@Override
+	public List<Guest> getFinalDueAmountById(String id) {
+		// TODO Auto-generated method stub
+		return em.createNamedStoredProcedureQuery("finalDue").setParameter("GUEST__ID" , id).getResultList();
+	}
+
 
 
 }

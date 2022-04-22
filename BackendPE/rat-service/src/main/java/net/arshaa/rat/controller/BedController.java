@@ -20,6 +20,7 @@ import Models.BedsInfo;
 import Models.BuildingId;
 import Models.BuildingInfo;
 import Models.BuildingModel;
+import Models.FloorNameAndId;
 import Models.FloorsInfo;
 import Models.NewBuildModel;
 import Models.RoomsInfo;
@@ -106,7 +107,7 @@ public class BedController {
 			    	Floors floors=new Floors();
 					
 					floors.setBuildingId(building.getBuilding_id());
-			        floors.setFloorNumber("FLOOR"+ i);
+			        floors.setFloorNumber("FLOOR"+"-"+ i);
 					Floors floor = floorRepo.save(floors);
 			    	
 			    }
@@ -841,5 +842,75 @@ Rooms room = roomRepo.save(newRoom);
 
 		}
 	}
+	
+	
+	
+	@GetMapping(path = "/getFloorIdAndNameByBuildingId/{buildingId}")
+	public ResponseEntity<List<Floors>> getFloorIdAndNameByBuildingId(@PathVariable int buildingId) {
+	{
+		try {
+			List<FloorNameAndId> floorList=new ArrayList<>();
+			FloorNameAndId f=new FloorNameAndId();
+			List<Floors> getfloors=floorRepo.getFloorsByBuildingId(buildingId);
+			if(!getfloors.isEmpty())
+			{
+				getfloors.forEach(floor->{
+					f.setFloorId(floor.getFloorId());
+					f.setFloorNumber(floor.getFloorNumber());
+					
+				});
+				floorList.add(f);
+			}
+			return new ResponseEntity(getfloors, HttpStatus.OK);
+
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity(e.getMessage(), HttpStatus.OK);
+
+		}
+		
+	}
+	}
+	
+	@GetMapping(path = "/getRoomIdAndNameByFloorId/{floorId}")
+	public ResponseEntity<List<Floors>> getRoomIdAndNameByFloorId(@PathVariable int floorId) {
+	{
+		try {
+			List<FloorNameAndId> floorList=new ArrayList<>();
+			FloorNameAndId f=new FloorNameAndId();
+			List<Rooms> getRooms=roomRepo.getRoomsByFloorId(floorId);
+			
+			return new ResponseEntity(getRooms, HttpStatus.OK);
+
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity(e.getMessage(), HttpStatus.OK);
+
+		}
+		
+	}
+	}
+
+	@GetMapping(path = "/getBedsByRoomId/{roomId}")
+	public ResponseEntity<List<Floors>> getBedsByRoomId(@PathVariable int roomId) {
+	{
+		try {
+			List<FloorNameAndId> floorList=new ArrayList<>();
+			FloorNameAndId f=new FloorNameAndId();
+			List<Bed> getBeds=bedrepo.getBedsByRoomId(roomId);
+			
+			return new ResponseEntity(getBeds, HttpStatus.OK);
+
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity(e.getMessage(), HttpStatus.OK);
+
+		}		
+	}
+	}
+
 
 }

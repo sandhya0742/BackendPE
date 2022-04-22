@@ -14,9 +14,17 @@ import org.hibernate.annotations.Parameter;
 @NamedStoredProcedureQuery(name = "firstProcedure", procedureName = " due_amount", parameters = {
 @StoredProcedureParameter(mode = ParameterMode.IN, name = "g_id", type = String.class) })
 ,
-@NamedStoredProcedureQuery(name = "secondProcedure", procedureName = " total_amount_building"),})
+@NamedStoredProcedureQuery(name = "secondProcedure", procedureName = " total_amount_building"),
 @NamedStoredProcedureQuery(name= "thirdProcedure" , procedureName= " by_building" , parameters = {
 @StoredProcedureParameter(mode = ParameterMode.IN , name = "b_id" , type= Integer.class )
+}),
+@NamedStoredProcedureQuery(name= "checkOut" , procedureName= "check_out_func" , parameters = {
+@StoredProcedureParameter(mode = ParameterMode.IN , name = "GUEST__ID" , type= String.class )
+}),
+@NamedStoredProcedureQuery(name= "finalDue" , procedureName= "final_payable" , parameters = {
+@StoredProcedureParameter(mode = ParameterMode.IN , name = "GUEST__ID" , type= String.class )
+})
+
 })
 public class Guest implements Serializable {
 
@@ -47,7 +55,7 @@ public class Guest implements Serializable {
     private String aadharNumber;
     private int buildingId;
     private String bedId;
-    //private int duration;
+    private int duration;
     private double dueAmount;
     private String addressLine1;
     private String addressLine2;
@@ -63,7 +71,15 @@ public class Guest implements Serializable {
     //private double defaultRent;
     private double securityDeposit;
     private boolean guestStatus;
-    //    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date noticeDate;
+    
+    public Date getNoticeDate() {
+		return noticeDate;
+	}
+	public void setNoticeDate(Date noticeDate) {
+		this.noticeDate = noticeDate;
+	}
+	//    @JsonFormat(pattern = "yyyy-MM-dd")
 //    private Date checkIenDate;
 //    @JsonFormat(pattern = "yyyy-MM-dd")
 //    private Date noticeDate;
@@ -77,53 +93,17 @@ public class Guest implements Serializable {
     @Temporal(TemporalType.DATE)
     private java.util.Date checkInDate = new java.util.Date(System.currentTimeMillis());
     private boolean termsOfService;
+    private java.util.Date checkOutDate;
     
-    
-	public Guest(String id, String firstName, String lastName, String email, Date dateOfBirth, String personalNumber,
-			String secondaryPhoneNumber, String fatherName, String fatherNumber, String bloodGroup, String occupation,
-			String occupancyType, String gender, String aadharNumber, int buildingId, String bedId, double dueAmount,
-			String addressLine1, String addressLine2, String pincode, String city, String state, String workPhone,
-			String workAddressLine1, String workAddressLine2, String transactionId, String paymentPurpose,
-			double amountToBePaid, double defaultRent, double securityDeposit, boolean guestStatus, double amountPaid,
-			String checkinNotes, java.util.Date transactionDate, java.util.Date checkInDate, boolean termsOfService) {
-		super();
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.dateOfBirth = dateOfBirth;
-		this.personalNumber = personalNumber;
-		this.secondaryPhoneNumber = secondaryPhoneNumber;
-		this.fatherName = fatherName;
-		this.fatherNumber = fatherNumber;
-		this.bloodGroup = bloodGroup;
-		this.occupation = occupation;
-		this.occupancyType = occupancyType;
-		this.gender = gender;
-		this.aadharNumber = aadharNumber;
-		this.buildingId = buildingId;
-		this.bedId = bedId;
-		this.dueAmount = dueAmount;
-		this.addressLine1 = addressLine1;
-		this.addressLine2 = addressLine2;
-		this.pincode = pincode;
-		this.city = city;
-		this.state = state;
-		this.workPhone = workPhone;
-		this.workAddressLine1 = workAddressLine1;
-		this.workAddressLine2 = workAddressLine2;
-		this.transactionId = transactionId;
-		this.paymentPurpose = paymentPurpose;
-		this.amountToBePaid = amountToBePaid;
-		this.securityDeposit = securityDeposit;
-		this.guestStatus = guestStatus;
-		this.amountPaid = amountPaid;
-		this.checkinNotes = checkinNotes;
-		this.transactionDate = transactionDate;
-		this.checkInDate = checkInDate;
-		this.termsOfService = termsOfService;
+	public java.util.Date getCheckOutDate() {
+		return checkOutDate;
 	}
-	public boolean isGuestStatus() {
+	public void setCheckOutDate(java.util.Date checkOutDate) {
+		this.checkOutDate = checkOutDate;
+	}
+	
+		
+		public boolean isGuestStatus() {
 		return guestStatus;
 	}
 	public void setGuestStatus(boolean guestStatus) {
@@ -149,6 +129,54 @@ public class Guest implements Serializable {
 	}
 	public String getEmail() {
 		return email;
+	}
+	public Guest(String id, String firstName, String lastName, String email, Date dateOfBirth, String personalNumber,
+			String secondaryPhoneNumber, String fatherName, String fatherNumber, String bloodGroup, String occupation,
+			String occupancyType, String gender, String aadharNumber, int buildingId, String bedId, int duration,
+			double dueAmount, String addressLine1, String addressLine2, String pincode, String city, String state,
+			String workPhone, String workAddressLine1, String workAddressLine2, String transactionId,
+			String paymentPurpose, double amountToBePaid, double securityDeposit, boolean guestStatus, Date noticeDate,
+			double amountPaid, String checkinNotes, java.util.Date transactionDate, java.util.Date checkInDate,
+			boolean termsOfService, java.util.Date checkOutDate) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.dateOfBirth = dateOfBirth;
+		this.personalNumber = personalNumber;
+		this.secondaryPhoneNumber = secondaryPhoneNumber;
+		this.fatherName = fatherName;
+		this.fatherNumber = fatherNumber;
+		this.bloodGroup = bloodGroup;
+		this.occupation = occupation;
+		this.occupancyType = occupancyType;
+		this.gender = gender;
+		this.aadharNumber = aadharNumber;
+		this.buildingId = buildingId;
+		this.bedId = bedId;
+		this.duration = duration;
+		this.dueAmount = dueAmount;
+		this.addressLine1 = addressLine1;
+		this.addressLine2 = addressLine2;
+		this.pincode = pincode;
+		this.city = city;
+		this.state = state;
+		this.workPhone = workPhone;
+		this.workAddressLine1 = workAddressLine1;
+		this.workAddressLine2 = workAddressLine2;
+		this.transactionId = transactionId;
+		this.paymentPurpose = paymentPurpose;
+		this.amountToBePaid = amountToBePaid;
+		this.securityDeposit = securityDeposit;
+		this.guestStatus = guestStatus;
+		this.noticeDate = noticeDate;
+		this.amountPaid = amountPaid;
+		this.checkinNotes = checkinNotes;
+		this.transactionDate = transactionDate;
+		this.checkInDate = checkInDate;
+		this.termsOfService = termsOfService;
+		this.checkOutDate = checkOutDate;
 	}
 	public void setEmail(String email) {
 		this.email = email;
@@ -338,14 +366,12 @@ public class Guest implements Serializable {
 	public Guest() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	public int getDuration() {
+		return duration;
+	}
+	public void setDuration(int duration) {
+		this.duration = duration;
 	}	
-	
-//    public int getDuration() {
-//        return duration;
-//    }
-//
-//    public void setDuration(int duration) {
-//        this.duration = duration;
-//    }
 
     }
