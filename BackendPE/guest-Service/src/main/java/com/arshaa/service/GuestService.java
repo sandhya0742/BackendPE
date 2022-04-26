@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 
@@ -64,8 +66,8 @@ public class GuestService implements GuestInterface {
             cal.add(Calendar.DATE, guest.getDuration()); 
             m = cal.getTime();   
             System.out.println(m);
-            guest.setCheckOutDate(m);
-            guest.setGuestStatus(true);            
+            guest.setPlanedCheckOutDate(m);
+            guest.setGuestStatus("active");            
             repository.save(guest);
         }
         else if(guest.getOccupancyType().equalsIgnoreCase("monthly"))
@@ -76,19 +78,23 @@ public class GuestService implements GuestInterface {
             cal.add(Calendar.MONTH, guest.getDuration()); 
             m = cal.getTime();   
             System.out.println(m);
-            guest.setCheckOutDate(m);
-            guest.setGuestStatus(true);            
+            
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+            //System.out.println(dtf.format(m));  
+
+            guest.setPlanedCheckOutDate(m);
+            guest.setGuestStatus("active");            
             repository.save(guest);
         }        
         else {
-            guest.setGuestStatus(true);            
+            guest.setGuestStatus("active");            
 
             repository.save(guest);
         }
 
 
 //        System.out.println(initialDefaultrent); 
-        guest.setGuestStatus(true);            
+        guest.setGuestStatus("active");            
 
         repository.save(guest);
                 System.out.println(guest.getDueAmount());

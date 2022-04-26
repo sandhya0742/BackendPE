@@ -10,4 +10,8 @@ public interface GuestRepository extends JpaRepository<Guest, Integer> {
 
 	Guest getGuestBybedId(String bedId);
 
+	Guest getGuestBybedIdAndGuestStatus(String bedId, String guestStatus);
+
+
+
 }

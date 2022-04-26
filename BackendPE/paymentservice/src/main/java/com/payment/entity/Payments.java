@@ -30,15 +30,43 @@ public class Payments {
     // private double dueDuringOnBoard ;
     // private String occupancyType[] = { "Daily" , "Monthly" , "Regular" };
     private String occupancyType;
+    
+    private double refundAmount;
+    
 
     // Fields taking reference from guest-Master Data .
     //    private double securityDeposit = 5000;
     private String guestId; // (f k) from guestId
+public Payments(int id, double dueAmount, double amountPaid, String transactionId, Date transactionDate,
+			Date checkinDate, boolean onBoard, String paymentPurpose, String occupancyType, double refundAmount,
+			String guestId) {
+		super();
+		this.id = id;
+		this.dueAmount = dueAmount;
+		this.amountPaid = amountPaid;
+		this.transactionId = transactionId;
+		this.transactionDate = transactionDate;
+		this.checkinDate = checkinDate;
+		this.onBoard = onBoard;
+		this.paymentPurpose = paymentPurpose;
+		this.occupancyType = occupancyType;
+		this.refundAmount = refundAmount;
+		this.guestId = guestId;
+	}
+
 //    double defaultRent;
 
     //Getters and setters .
 
-    public int getPaymentId() {
+    public double getRefundAmount() {
+		return refundAmount;
+	}
+
+	public void setRefundAmount(double refundAmount) {
+		this.refundAmount = refundAmount;
+	}
+
+	public int getPaymentId() {
         return id;
     }
 

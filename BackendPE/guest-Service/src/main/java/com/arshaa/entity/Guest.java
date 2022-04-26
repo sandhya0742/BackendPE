@@ -18,10 +18,10 @@ import org.hibernate.annotations.Parameter;
 @NamedStoredProcedureQuery(name= "thirdProcedure" , procedureName= " by_building" , parameters = {
 @StoredProcedureParameter(mode = ParameterMode.IN , name = "b_id" , type= Integer.class )
 }),
-@NamedStoredProcedureQuery(name= "checkOut" , procedureName= "check_out_func" , parameters = {
+@NamedStoredProcedureQuery(name= "checkOut" , procedureName= "initiate_check_out" , parameters = {
 @StoredProcedureParameter(mode = ParameterMode.IN , name = "GUEST__ID" , type= String.class )
 }),
-@NamedStoredProcedureQuery(name= "finalDue" , procedureName= "final_payable" , parameters = {
+@NamedStoredProcedureQuery(name= "finalDue" , procedureName= "check_out" , parameters = {
 @StoredProcedureParameter(mode = ParameterMode.IN , name = "GUEST__ID" , type= String.class )
 })
 
@@ -70,7 +70,7 @@ public class Guest implements Serializable {
     private double amountToBePaid;
     //private double defaultRent;
     private double securityDeposit;
-    private boolean guestStatus;
+    private String guestStatus;
     private Date noticeDate;
     
     public Date getNoticeDate() {
@@ -93,8 +93,19 @@ public class Guest implements Serializable {
     @Temporal(TemporalType.DATE)
     private java.util.Date checkInDate = new java.util.Date(System.currentTimeMillis());
     private boolean termsOfService;
+    private java.util.Date planedCheckOutDate;
     private java.util.Date checkOutDate;
+
     
+	public java.util.Date getPlanedCheckOutDate() {
+		return planedCheckOutDate;
+	}
+	public void setPlanedCheckOutDate(java.util.Date planedCheckOutDate) {
+		this.planedCheckOutDate = planedCheckOutDate;
+	}
+	public String getGuestStatus() {
+		return guestStatus;
+	}
 	public java.util.Date getCheckOutDate() {
 		return checkOutDate;
 	}
@@ -103,10 +114,10 @@ public class Guest implements Serializable {
 	}
 	
 		
-		public boolean isGuestStatus() {
+		public String isGuestStatus() {
 		return guestStatus;
 	}
-	public void setGuestStatus(boolean guestStatus) {
+	public void setGuestStatus(String guestStatus) {
 		this.guestStatus = guestStatus;
 	}
 	public String getId() {
@@ -135,7 +146,7 @@ public class Guest implements Serializable {
 			String occupancyType, String gender, String aadharNumber, int buildingId, String bedId, int duration,
 			double dueAmount, String addressLine1, String addressLine2, String pincode, String city, String state,
 			String workPhone, String workAddressLine1, String workAddressLine2, String transactionId,
-			String paymentPurpose, double amountToBePaid, double securityDeposit, boolean guestStatus, Date noticeDate,
+			String paymentPurpose, double amountToBePaid, double securityDeposit, String guestStatus, Date noticeDate,
 			double amountPaid, String checkinNotes, java.util.Date transactionDate, java.util.Date checkInDate,
 			boolean termsOfService, java.util.Date checkOutDate) {
 		super();

@@ -17,8 +17,36 @@ public class BedsInfo {
 	private double securityDeposit;
 	private String guestName;
 	private Guest guest;
+	private String guestStatus;
+	
 
-	 public String getGuestName() {
+	 public String getGuestStatus() {
+		return guestStatus;
+	}
+	public void setGuestStatus(String guestStatus) {
+		this.guestStatus = guestStatus;
+	}
+	public BedsInfo(boolean bedStatus, String guestId, double defaultRent, boolean ac, int roomId, int floorId,
+			int buildingId, String bedName, String bedId, String buildingName, int bedNum, double securityDeposit,
+			String guestName, Guest guest, String guestStatus) {
+		super();
+		this.bedStatus = bedStatus;
+		this.guestId = guestId;
+		this.defaultRent = defaultRent;
+		this.ac = ac;
+		this.roomId = roomId;
+		this.floorId = floorId;
+		this.buildingId = buildingId;
+		this.bedName = bedName;
+		this.bedId = bedId;
+		this.buildingName = buildingName;
+		this.bedNum = bedNum;
+		this.securityDeposit = securityDeposit;
+		this.guestName = guestName;
+		this.guest = guest;
+		this.guestStatus = guestStatus;
+	}
+	public String getGuestName() {
 		 return guestName; 
 	 } 
 	 public void

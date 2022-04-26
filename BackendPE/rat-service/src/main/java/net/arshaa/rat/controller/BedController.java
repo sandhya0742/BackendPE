@@ -532,17 +532,19 @@ Rooms room = roomRepo.save(newRoom);
 												newBed.setBedNum(bed.getId());
 												newBed.setSecurityDeposit(bed.getSecurityDeposit());
 												newBed.setBuildingName(getBuilding.get().getBuilding_name());
-												if(bed.isBedStatus()==false)
-												{
-													Guest listOfGuests=template.getForObject("http://guestService/guest/getGuestByBedId/" + newBed.getBedId(),Guest.class);
-													//newBed.setGuest(listOfGuests);
-													newBed.setGuestId(listOfGuests.getId());
-													newBed.setGuestName(listOfGuests.getFirstName());
-													bedsList.add(newBed);
-												}
-												else {
-													bedsList.add(newBed);
-												}		
+//												if(bed.isBedStatus()==false)
+//												{
+//													Guest listOfGuests=template.getForObject("http://guestService/guest/getGuestByBedId/" + newBed.getBedId(),Guest.class);
+//													//newBed.setGuest(listOfGuests);
+//													newBed.setGuestId(listOfGuests.getId());
+//													newBed.setGuestName(listOfGuests.getFirstName());
+//													bedsList.add(newBed);
+//												}
+//												else {
+//													bedsList.add(newBed);
+//												}
+												bedsList.add(newBed);
+
 											});
 										}
 										newRoom.setBeds(bedsList);
@@ -569,7 +571,7 @@ Rooms room = roomRepo.save(newRoom);
 	@GetMapping(path = "/getBedsByBuildingId/{id}")
 	public ResponseEntity<BuildingInfo> getByBuildingId(@PathVariable Integer id) {
 		List<BuildingInfo> infoList = new ArrayList<>();
-
+  
 		BuildingInfo info = new BuildingInfo();
 		Optional<Buildings> getBuilding = buildingRepo.findById(id);
 		if (getBuilding.isPresent()) {
@@ -599,11 +601,13 @@ Rooms room = roomRepo.save(newRoom);
 									newBed.setDefaultRent(bed.getDefaultRent());
 									newBed.setAc(bed.isAc());
 									newBed.setBedNum(bed.getId());
+									newBed.setGuestId(bed.getGuestId());
+									//newBed.setGuestStatus("active");
+									//String guestStatus="active";
 									if(bed.isBedStatus()==false)
 									{
-										Guest listOfGuests=template.getForObject("http://guestService/guest/getGuestByBedId/" + newBed.getBedId(),Guest.class);
+										Guest listOfGuests=template.getForObject("http://guestService/guest/getGuestByGuestId/" + newBed.getGuestId(),Guest.class);
 										//newBed.setGuest(listOfGuests);
-										newBed.setGuestId(listOfGuests.getId());
 										newBed.setGuestName(listOfGuests.getFirstName());
 										bedsList.add(newBed);
 									}

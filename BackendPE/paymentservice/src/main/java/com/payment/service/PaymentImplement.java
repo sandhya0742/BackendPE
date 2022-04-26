@@ -73,6 +73,8 @@ public class PaymentImplement implements PaymentService {
             firstPay.setOccupancyType(payment.getOccupancyType());
             firstPay.setTransactionDate(payment.getTransactionDate());
             firstPay.setAmountPaid(payment.getAmountPaid());
+            firstPay.setPaymentPurpose(payment.getPaymentPurpose());
+            firstPay.setRefundAmount(payment.getRefundAmount());
             if (firstPay.getAmountPaid() > 0) {
                 firstPay.setOnBoard(true);
             }
@@ -128,7 +130,7 @@ public class PaymentImplement implements PaymentService {
 
     //7.Posting the data of Guest After onBOarding .
     @Override
-    public Payments addPaymentAfterOnBoard(Payments payment) {
+    public String addPaymentAfterOnBoard(Payments payment) {
         String uri = "http://guestService/guest/updateDueAmount";
         Guest guest = new Guest();
         Payments secondpay = new Payments();
@@ -144,15 +146,17 @@ public class PaymentImplement implements PaymentService {
             java.sql.Date tSqlDate = new java.sql.Date(payment.getTransactionDate().getTime());
             payment.setTransactionDate(tSqlDate);
             secondpay.setTransactionDate(payment.getTransactionDate());
+            secondpay.setRefundAmount(payment.getRefundAmount());
             repo.save(secondpay);
             guest.setId(secondpay.getGuestId());
             guest.setDueAmount(secondpay.getDueAmount());
             template.put(uri, guest, Guest.class);
-            return secondpay;
+            return "successfull";
         } catch (Exception e) {
             e.printStackTrace();
+            return e.getMessage();
+
         }
-        return null;
     }
 
 	@SuppressWarnings("unchecked")

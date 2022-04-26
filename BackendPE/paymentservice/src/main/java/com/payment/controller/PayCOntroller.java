@@ -70,7 +70,7 @@ public class PayCOntroller {
 
 	// POSTING INFORMATION OF PAYMENT BASED ON GUEST TYPE .
 	@PostMapping("/addAfterOnBoard")
-	public Payments addPaymentAfterOnBoar(@RequestBody Payments payment) {
+	public String addPaymentAfterOnBoar(@RequestBody Payments payment) {
 		return this.serve.addPaymentAfterOnBoard(payment);
 	}
 

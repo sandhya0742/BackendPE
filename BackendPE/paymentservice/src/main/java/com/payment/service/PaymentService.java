@@ -28,7 +28,7 @@ public interface PaymentService {
 	public double getDueAmountByGuestId(String guestId);
 
 //7.Posting the data of Guest After onBOarding .
-	public Payments addPaymentAfterOnBoard(Payments payment);
+	public String addPaymentAfterOnBoard(Payments payment);
 
 	public List<Payments> getPaymentPending();
 

@@ -68,19 +68,26 @@ public class GuestController {
 
    	}
 
-   	@GetMapping("/getGuestByBedId/{bedId}")
-   	public ResponseEntity<GuestModel> getGuestByBedId(@PathVariable String bedId)
+   	@GetMapping("/getGuestByBedId/{guestStatus}/{bedId}")
+   	public ResponseEntity<GuestModel> getGuestByBedIdAndGuestStatus(@PathVariable String guestStatus, String bedId)
    	{
    		GuestModel gm=new GuestModel();
-   		Guest guest=repository.getGuestBybedId( bedId);
-   		if(guest.isGuestStatus()==true)
-   		{
-   			gm.setFirstName(guest.getFirstName());
-   			gm.setId(guest.getId());
-   			return new ResponseEntity(guest, HttpStatus.OK);
+   		try {
+   			Guest guest=repository.getGuestBybedIdAndGuestStatus(bedId,guestStatus);
+   	   		if(guest.isGuestStatus().equalsIgnoreCase("active") ||guest.isGuestStatus().equalsIgnoreCase("inNotice") )
+   	   		{
+   	   			gm.setFirstName(guest.getFirstName());
+   	   			gm.setId(guest.getId());
+   	   			return new ResponseEntity(guest, HttpStatus.OK);
+   	   		}
+   				return new ResponseEntity("Guest is Inactive", HttpStatus.OK);
    		}
-			return new ResponseEntity("Guest is Inactive", HttpStatus.OK);
-   	}
+   		catch (Exception e) {
+			// TODO: handle exception
+				return new ResponseEntity(e.getMessage(), HttpStatus.OK);
+
+		}
+   		   	}
   
    	@GetMapping("/getPendingAndCompletedById/{buildingId}")
    	public List<Guest> getPendingByBuildingId(@PathVariable int buildingId) {
